@@ -11,14 +11,21 @@ public class HistImageDTO {
     private int imageId;
     private String imageUrl;
     private String fileName;
-    private String imagePath;
     private int position;
+
+    public HistImageDTO() {}
     
-    public HistImageDTO(HistImage image) {
+    public HistImageDTO(HistImage image, String baseUrl) {
         this.imageId = image.getImageId();
-        this.imageUrl = image.getImageUrl();
         this.fileName = image.getFileName();
-        this.imagePath = image.getImagePath();
         this.position = image.getPosition();
+
+        String imagePath = image.getImagePath();
+        if (imagePath != null && imagePath.contains("/uploads/")) {
+            String relativePath = imagePath.substring(imagePath.indexOf("/uploads/"));
+            this.imageUrl = baseUrl + relativePath;
+        } else {
+            this.imageUrl = null;
+        }
     }
 }

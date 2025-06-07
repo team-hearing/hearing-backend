@@ -56,8 +56,21 @@ public class HistImageService {
 
         // UUID 기반 파일 이름 생성
         String uuidFileName = UUID.randomUUID().toString() + fileExtension;
+        
+        // 저장 디렉토리 객체
+        File uploadDirectory = new File(uploadDir);
 
-        File targetFile = new File(uploadDir, uuidFileName);
+        // 디렉토리가 없으면 생성
+        if (!uploadDirectory.exists()) {
+            boolean created = uploadDirectory.mkdirs();
+            if (!created) {
+                throw new IOException("이미지 업로드 디렉토리 생성 실패: " + uploadDir);
+            }
+        }
+
+        // 최종 저장 파일
+        File targetFile = new File(uploadDirectory, uuidFileName);
+        //File targetFile = new File(uploadDir, uuidFileName);
 
         // 파일 저장
         imageFile.transferTo(targetFile);

@@ -1,7 +1,8 @@
 package com.hearing_backend.domain.hist_event;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hearing_backend.domain.hist_image.HistImage;
@@ -28,6 +29,9 @@ public class HistEventService {
     
     @Autowired
     private HistImageRepository histImageRepository; 
+    
+    @Value("${image.base-url}")
+    private String baseUrl; 
 
     public List<HistEvent> getAllHistEvents() {
         return histEventRepository.findAll();
@@ -61,7 +65,7 @@ public class HistEventService {
                             List<HistImage> images = eventImagesMap.getOrDefault(event.getEventId(), Collections.emptyList());
                             HistEventDTO eventDTO = new HistEventDTO(event);
                             eventDTO.setImages(images.stream()
-                                .map(histImage -> new HistImageDTO(histImage))  // HistImageDTO로 변환
+                                .map(histImage -> new HistImageDTO(histImage,baseUrl))  // HistImageDTO로 변환
                                 .collect(Collectors.toList()));  // 이미지 리스트 설정
                             return eventDTO;
                         },
